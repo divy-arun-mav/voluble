@@ -15,7 +15,7 @@ import animationData from "../animations/typing.json";
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/ChatProvider";
-const ENDPOINT = process.env.REACT_APP_BACKEND_API; // "https://talk-a-tive.herokuapp.com"; -> After deployment
+const ENDPOINT = process.env.REACT_APP_BACKEND_API || "https://voluble-zcnj.onrender.com";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -173,7 +173,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
 
 useEffect(() => {
-  socket = io(ENDPOINT);
+  socket = io(ENDPOINT, {
+    transports: ["websocket"], 
+    withCredentials: true, 
+  });
   socket.emit("setup", user);
   socket.on("connected", () => setSocketConnected(true));
   socket.on("online-users", (users) => {

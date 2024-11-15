@@ -11,7 +11,13 @@ const cors = require('cors');
 connectDB();
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: process.env.ORIGIN || "https://divy-mav-voluble.netlify.app", // Default to localhost if env is missing
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true, // Allow cookies or authentication headers
+};
+
+app.use(cors(corsOptions));
 app.use(express.json()); // to accept json data
 
 // app.get("/", (req, res) => {
@@ -56,8 +62,9 @@ const server = app.listen(
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: process.env.ORIGIN,
-    // credentials: true,
+    origin: process.env.ORIGIN || "https://divy-mav-voluble.netlify.app",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
   },
 });
 
