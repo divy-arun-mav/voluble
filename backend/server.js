@@ -12,9 +12,12 @@ connectDB();
 const app = express();
 
 const corsOptions = {
-  origin: process.env.ORIGIN || "https://divy-mav-voluble.netlify.app", // Default to localhost if env is missing
+  origin: [
+    "https://divy-mav-voluble.netlify.app", // Deployed frontend
+    "http://localhost:3000",               // Local development frontend
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true, // Allow cookies or authentication headers
+  credentials: true, // Allow cookies/auth headers
 };
 
 app.use(cors(corsOptions));
