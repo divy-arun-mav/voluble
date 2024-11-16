@@ -71,6 +71,8 @@ Start the Client
 ![](https://github.com/divy-arun-mav/voluble/blob/main/Screenshots/image-uploading.png)
 ### Read Receipts
 ![](https://github.com/divy-arun-mav/voluble/blob/main/Screenshots/read-receipts.png)
+### typing Indicator
+![](https://github.com/divy-arun-mav/voluble/blob/main/Screenshots/typing%20%indicator.png)
 ### Search Users
 ![](https://github.com/divy-arun-mav/voluble/blob/main/Screenshots/search.png)
 ### Create Group Chats
