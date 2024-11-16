@@ -145,7 +145,7 @@ function SideDrawer() {
           </Button>
         </Tooltip>
         <Text fontSize="2xl" fontFamily="Work sans">
-          WhatsApp
+          Voluble
         </Text>
         <div>
           <Menu>
