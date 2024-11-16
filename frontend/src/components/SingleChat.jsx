@@ -15,7 +15,7 @@ import animationData from "../animations/typing.json";
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/ChatProvider";
-const ENDPOINT = process.env.REACT_APP_BACKEND_API || "https://voluble-zcnj.onrender.com";
+const ENDPOINT = process.env.REACT_APP_BACKEND_API || "http://localhost:5000";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -31,6 +31,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [isOnline, setIsOnline] = useState(false);
+  const [newMsg, setNewMsg] = useState();
   const toast = useToast();
 
   const defaultOptions = {
@@ -44,7 +45,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const { selectedChat, setSelectedChat, user, notification, setNotification } =
     ChatState();
 
-  const fetchMessages = async () => {
+  const fetchMessages = async ({ load }) => {
     if (!selectedChat) return;
 
     try {
@@ -54,7 +55,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         },
       };
 
-      setLoading(true);
+      if (load) setLoading(true);
 
       const { data } = await axios.get(
         `${process.env.REACT_APP_BACKEND_API}/api/message/${selectedChat._id}`,
@@ -130,6 +131,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           isClosable: true,
           position: "bottom",
         });
+      } finally {
+        fetchMessages(false);
       }
     }
   };
@@ -189,11 +192,10 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  fetchMessages();
+  fetchMessages(true);
   selectedChatCompare = selectedChat;
   const recipientId = selectedChat?.users?.find((u) => u._id !== user._id)?._id;
   const recipientOnline = onlineUsers?.some((u) => {
-    console.log(u);
     return u === recipientId;
   });
   setIsOnline(recipientOnline);
@@ -213,8 +215,15 @@ useEffect(() => {
     } else {
       setMessages([...messages, newMessageRecieved]);
     }
+    socket.emit('message-read', {
+      messageId: newMessageRecieved._id,
+      userId: user._id,
+      chatId: selectedChat
+    });
+    console.log("message read ", newMessageRecieved);
   });
 });
+  
 
 const typingHandler = (e) => {
   setNewMessage(e.target.value);
@@ -282,7 +291,7 @@ return (
               <>
                 {selectedChat.chatName.toUpperCase()}
                 <UpdateGroupChatModal
-                  fetchMessages={fetchMessages}
+                  fetchMessages={fetchMessages(true)}
                   fetchAgain={fetchAgain}
                   setFetchAgain={setFetchAgain}
                 />

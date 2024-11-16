@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
+import { useState } from "react";
+import { Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody } from "@chakra-ui/react";
 import { Avatar } from "@chakra-ui/avatar";
 import { Tooltip } from "@chakra-ui/tooltip";
 import ScrollableFeed from "react-scrollable-feed";
@@ -10,6 +13,8 @@ import {
 import { ChatState } from "../Context/ChatProvider";
 
 const ScrollableChat = ({ messages }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [img, setImg] = useState();
   const { user } = ChatState();
 
   const formatDate = (time) => {
@@ -43,8 +48,7 @@ const ScrollableChat = ({ messages }) => {
               )}
             <span
               style={{
-                backgroundColor: `${m.sender._id === user._id ? "#BEE3F8" : "#B9F5D0"
-                  }`,
+                backgroundColor: `${m.sender._id === user._id ? "#BEE3F8" : "#B9F5D0"}`,
                 marginLeft: isSameSenderMargin(messages, m, i, user._id),
                 marginTop: isSameUser(messages, m, i, user._id) ? 3 : 10,
                 borderRadius: "20px",
@@ -60,23 +64,49 @@ const ScrollableChat = ({ messages }) => {
                 (m.content.includes('https') && m.content.includes('upload')) || m.content.includes('image') ? (
                   // eslint-disable-next-line jsx-a11y/img-redundant-alt
                   <img
+                    onClick={() => { setShowModal(true); setImg(m.content); }}
                     src={m.content}
                     alt="message image"
                     style={{
                       maxWidth: "100%",
                       height: "auto",
                       borderRadius: "10px",
-                      objectFit: "cover"
+                      objectFit: "cover",
                     }}
                   />
                 ) : (
                   m.content
                 )
               }
-              <span style={{ fontSize: "10px" }}>{formatDate(m.createdAt)}</span>
+              <span style={{ fontSize: "10px", display: 'flex' }}>
+                {formatDate(m.createdAt)}
+                {m.sender._id === user._id ? (<p style={{ marginLeft: "10px" }}>{m.status}</p>) : null}
+              </span>
             </span>
           </div>
         ))}
+
+      {/* Modal to display the clicked image */}
+      {showModal && (
+        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalCloseButton />
+            <ModalBody>
+              <img
+                src={img}
+                alt="message image"
+                style={{
+                  maxWidth: "100%",
+                  height: "auto",
+                  borderRadius: "10px",
+                  objectFit: "cover"
+                }}
+              />
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      )}
     </ScrollableFeed>
   );
 };

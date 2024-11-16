@@ -125,6 +125,10 @@ function SideDrawer() {
     }
   };
 
+  const markAllasRead = () => {
+    
+  }
+
   return (
     <>
       <Box
@@ -211,7 +215,8 @@ function SideDrawer() {
               <ChatLoading />
             ) : (
                 Array.isArray(searchResult) && searchResult?.map((friend) => (
-                <UserListItem
+                  <UserListItem
+                    onClick={markAllasRead}
                   key={friend._id}
                   friend={friend}
                   handleFunction={() => accessChat(friend._id)}

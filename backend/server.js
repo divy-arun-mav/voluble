@@ -7,20 +7,12 @@ const messageRoutes = require("./routes/messageRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const path = require("path");
 const cors = require('cors');
+const Message = require('./models/messageModel')
 
 connectDB();
 const app = express();
 
-const corsOptions = {
-  origin: [
-    "https://divy-mav-voluble.netlify.app", // Deployed frontend
-    "http://localhost:3000",               // Local development frontend
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true, // Allow cookies/auth headers
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json()); // to accept json data
 
 // app.get("/", (req, res) => {
@@ -55,7 +47,7 @@ app.use(errorHandler);
 
 const onlineUser = new Set();
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 const server = app.listen(
   PORT,
@@ -85,6 +77,7 @@ io.on("connection", (socket) => {
     socket.join(room);
     console.log("User Joined Room: " + room);
   });
+
   socket.on("typing", (room) => socket.in(room).emit("typing"));
   socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 
@@ -99,6 +92,29 @@ io.on("connection", (socket) => {
 
       socket.in(user._id).emit("message recieved", newMessageRecieved);
     });
+  });
+
+  socket.on("message-read", ({ messageId, userId, chatId }) => {
+    console.log("message read ", messageId, userId);
+    const updatedMessages = Message.findByIdAndUpdate(
+      messageId,
+      { $addToSet: { readBy: userId }, $set: { status: "read" } },
+      { new: true }
+    )
+      .populate("chat")
+      .exec(async (err, updatedMessage) => {
+        if (err) {
+          console.error("Error updating message:", err);
+          return;
+        }
+
+        if (!updatedMessage) {
+          console.error("Message not found");
+          return;
+        }
+        socket.to(chatId).emit("message-status-updated", updatedMessages);
+        console.log("Updated messages sent to chat:", chatId);
+      });
   });
 
   socket.on("disconnect", () => {

@@ -54,4 +54,18 @@ const sendMessage = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { allMessages, sendMessage };
+const markMessagesAsRead = asyncHandler(async (req, res) => {
+  const { chatId } = req.params;
+
+  try {
+    await Message.updateMany(
+      { chat: chatId, readBy: { $ne: req.user._id } }, // Only update unread messages
+      { $set: { readBy: req.user._id, status: "read" } } // Add current user to readBy
+    );
+    res.status(200).json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+module.exports = { allMessages, sendMessage, markMessagesAsRead };
