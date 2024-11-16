@@ -1,0 +1,27 @@
+These are the instructions for setup of the application
+
+after unzipping the folder, open command prompt and go to the frontend folder, there run below command
+
+"" npm i "" 
+
+this command will install all the dependencies for frontend.
+
+Now open a new terminal and there open the project folder and run below command 
+
+"" npm i ""
+
+this command will install all the dependencies for the backend.
+
+after that in the first terminal in the frontend folder run command
+
+"" npm start ""
+
+to start the react-app.
+
+Alongside in the second terminal run command 
+
+"" npm run server ""
+
+this command will start the backend server.
+
+And now the setup is complete.
