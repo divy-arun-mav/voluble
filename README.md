@@ -13,6 +13,8 @@ Uses Socket.io for real time communication and stores user details in encrypted 
   
 ## Demo
 
+##### Youtube Video :- https://youtu.be/ZjLy2lHAheU
+
 [Frontend](https://divy-mav-voluble.netlify.app/) [Backend](https://voluble-zcnj.onrender.com)
 
 ![](https://github.com/divy-arun-mav/voluble/blob/main/Screenshots/initial.png)
@@ -65,11 +67,12 @@ Start the Client
 ### One to One chat
 ![](https://github.com/divy-arun-mav/voluble/blob/main/Screenshots/initial.png)
 ### Send Image
+##### Youtube Video :- https://youtu.be/ZjLy2lHAheU
 ![](https://github.com/divy-arun-mav/voluble/blob/main/Screenshots/image-uploading.png)
 ### Read Receipts
-![](https://github.com/divy-arun-mav/voluble/blob/main/Screenshots/image-uploading.png)
+![](https://github.com/divy-arun-mav/voluble/blob/main/Screenshots/read-receipts.png)
 ### Search Users
-![](https://github.com/piyush-eon/mern-chat-app/blob/master/screenshots/search.PNG)
+![](https://github.com/divy-arun-mav/voluble/blob/main/Screenshots/search.png)
 ### Create Group Chats
 ![](https://github.com/divy-arun-mav/voluble/blob/main/Screenshots/create-group.png)
 ### Notifications 
